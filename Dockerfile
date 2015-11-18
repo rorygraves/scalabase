@@ -3,10 +3,11 @@
 # https://github.com/rorygraves/scalabase/
 #
 
-MAINTAINER Rory Graves, rory.graves@fieldmark.co.uk
-
 # Pull base image.
 FROM dockerfile/ubuntu
+
+MAINTAINER Rory Graves, rory.graves@fieldmark.co.uk
+
 
 # Install Java.
 RUN \
