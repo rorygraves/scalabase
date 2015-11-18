@@ -3,7 +3,7 @@
 # https://github.com/rorygraves/scalabase/
 #
 
-# Pull base image.
+# Pull base image from phusion
 FROM  phusion/baseimage                                                                                                 
 
 MAINTAINER Rory Graves, rory.graves@fieldmark.co.uk
