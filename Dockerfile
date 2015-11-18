@@ -4,10 +4,18 @@
 #
 
 # Pull base image.
-FROM dockerfile/ubuntu
+FROM  phusion/baseimage                                                                                                 
 
 MAINTAINER Rory Graves, rory.graves@fieldmark.co.uk
 
+# Install git and a few other useful gits
+RUN\
+  echo "installing curl git locals ca-certifcates" &&\
+  apt-get update && \
+  apt-get install -y curl git locales ca-certificates &&\
+  echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen &&\
+  locale-gen &&\
+  apt-get clean
 
 # Install Java.
 RUN \
@@ -21,6 +29,9 @@ RUN \
 # Define commonly used JAVA_HOME variable
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
+RUN \
+  java -version
+
 ################################################
 # SBT (and by implication, Scala)
 ADD https://raw.githubusercontent.com/paulp/sbt-extras/master/sbt /usr/bin/sbt
@@ -30,14 +41,20 @@ RUN\
   cd /tmp/sbt &&\
   mkdir -p project src/main/scala &&\
   touch src/main/scala/scratch.scala &&\
-  for SBT_VERSION in $SBT_VARIANTS ; do\
-    echo "sbt.version=$SBT_VERSION" > project/build.properties &&\
-    for SCALA_VERSION in $SCALA_VARIANTS ; do\
-      sbt ++$SCALA_VERSION clean updateClassifiers compile ;\
-    done ;\
-  done &&\
+  echo "sbt.version=0.13.9" > project/build.properties &&\
+  sbt ++2.11.7 clean updateClassifiers compile &&\
   rm -rf /tmp/sbt
   
+# Ensime and deps
+RUN\
+  cd /root &&\
+  git clone https://github.com/ensime/ensime-server.git &&\
+  cd ensime-server &&\
+  git reset --hard origin/master &&\
+  git clean -xfd &&\
+  sbt gen-ensime &&\
+  rm -rf /root/ensime-server
+
 
 # Define working directory.
 WORKDIR /data
