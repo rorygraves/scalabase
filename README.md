@@ -4,4 +4,4 @@ A Baseline docker image for Ensime testing
 Ubuntu
 Java 8
 SBT/Scala deps
-Ensime depencies precached.
+Ensime dependencies precached.
